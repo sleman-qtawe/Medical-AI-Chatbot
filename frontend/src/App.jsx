@@ -1,12 +1,14 @@
-import React from 'react';
+import React from "react";
+import AddUser from "./components/AddUser/AddUser.jsx";
+import Doctors from "./components/Doctors/Doctors.jsx";
+import Therapists from "./components/Therapists/Therapists.jsx";
 
-const App = () => {
+function App() {
   return (
-    <div className="container">
-      <h1>Hello, Bootstrap!</h1>
-      <button className="btn btn-primary">Click Me</button>
+    <div className="App">
+      <AddUser />
     </div>
   );
-};
+}
 
 export default App;
