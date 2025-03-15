@@ -25,3 +25,11 @@ cd backend
 python -m venv venv
 source venv/bin/activate  # (For Windows: venv\Scripts\activate)
 python app.py
+
+  git pull origin main  
+
+  Git add .
+
+  git commit -m "sleman update2"  
+
+  git push origin main
