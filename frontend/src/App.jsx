@@ -6,7 +6,7 @@ import Therapists from "./components/Therapists/Therapists.jsx";
 function App() {
   return (
     <div className="App">
-      <AddUser />
+     <Therapists />
     </div>
   );
 }
