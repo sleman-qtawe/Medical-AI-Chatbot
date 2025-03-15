@@ -1,12 +1,10 @@
 import React from "react";
-import AddUser from "./components/AddUser/AddUser.jsx";
-import Doctors from "./components/Doctors/Doctors.jsx";
-import Therapists from "./components/Therapists/Therapists.jsx";
+import Dropdowns from "./components/Dropdowns/Dropdowns";
 
 function App() {
   return (
     <div className="App">
-     <Therapists />
+     <Dropdowns />
     </div>
   );
 }

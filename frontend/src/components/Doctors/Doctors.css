@@ -66,3 +66,12 @@
     padding: 5px 10px;
   }
   
+  .btn-custom {
+    background-color: #0fa4af;
+    border-color: #0fa4af;
+  }
+  
+  .btn-custom:hover {
+    background-color: #A1A7B1; 
+    border-color: #A1A7B1;
+  }
