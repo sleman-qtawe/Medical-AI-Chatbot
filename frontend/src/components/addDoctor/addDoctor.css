@@ -1,0 +1,97 @@
+.whole-page{
+    background-color: #0d8c96;
+    height: 100%;
+    width: 100%;
+    top : 0%;
+    left : 0%;
+    position: absolute;
+  }
+  
+  
+  
+  .add-doctors-page {
+    /* padding: 20px; */
+    top : 5%;
+    left : 35%;
+    background-color: #0d8c96;
+    color: #0fa4af;
+    position: absolute;
+    font-family: "Arial", sans-serif;
+  }
+  
+  h1 {
+    text-align: center;
+    color: white;
+    margin-bottom: 20px;
+  }
+  
+  .doctor-form {
+    max-width: 400px;
+    margin: 0 auto;
+    /* padding: 20px; */
+    border: 1px solid #0fa4af;
+    border-radius: 10px;
+    background-color: white;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #0fa4af;
+    /* font-weight: bold; */
+  }
+  
+  .form-group input {
+    width: 80%;
+    /* padding: 10px; */
+    border: 1px solid #0fa4af;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  
+  .submit-button {
+    width: 100%;
+    /* padding: 10px; */
+    background-color: #0fa4af;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .submit-button:hover {
+    background-color: #0d8c96;
+  }
+  
+  .doctors-list {
+    margin-top: 30px;
+  }
+  
+  .doctors-list h2 {
+    text-align: center;
+    color: #0fa4af;
+  }
+  
+  .doctors-list ul {
+    list-style-type: none;
+    /* padding: 0; */
+  }
+  
+  .doctor-card {
+    background-color: white;
+    border: 1px solid #0fa4af;
+    border-radius: 10px;
+    /* padding: 15px; */
+    margin-bottom: 10px;
+    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
+  }
+  
+  .doctor-card p {
+    /* margin: 5px 0; */
+    color: #0fa4af;
+  }
