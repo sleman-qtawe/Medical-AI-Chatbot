@@ -24,6 +24,7 @@ npm run dev
 cd backend
 python -m venv venv
 source venv/bin/activate  # (For Windows: venv\Scripts\activate)
+pip install flask flask-cors pymongo flask-pymongo python-dotenv
 python app.py
 
   git pull origin main  
