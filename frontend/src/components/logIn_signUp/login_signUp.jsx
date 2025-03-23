@@ -1,7 +1,8 @@
 import { useState } from "react";
 import "./logIn_signUp.css";
+const apiurl = import.meta.env.VITE_API_URL;
 
-function App() {
+function LoginSignup() {
   const [isSignUp, setIsSignUp] = useState(false);
   const [userId, setUserId] = useState("");
   const [userGender, setUserGender] = useState("");
@@ -16,6 +17,38 @@ function App() {
       console.log("Logging In:", { email, password });
     }
   };
+
+  const addUser=async()=>{
+    let newuser= {'username':username,
+      'userid':userId,
+      'userGender':userGender,
+      'email':email,
+      'password':password
+    }
+
+    try{
+      const response=await fetch(`${apiurl}/users`,{
+        method:"POST",
+        headers: {
+          "Content-Type": "application/json",  
+        },
+        body:JSON.stringify(newuser)
+      });
+
+      if(response.ok){
+        console.log("user added successfully")
+        setEmail("")
+        setUsername("")
+        setPassword("")
+        setUserGender("")
+        setUserId("")
+      }else{
+        console.log("faild added user")
+      }
+    }catch(error){
+      console.log("error adding user",error)
+    }
+  }
 
   return (
     <div className="container">
@@ -41,7 +74,7 @@ function App() {
       {isSignUp && (
   <>
     <input
-      type="number"
+      type="text"
       className="input"
       placeholder="ID"
       value={userId}
@@ -84,11 +117,11 @@ function App() {
         onChange={(e) => setPassword(e.target.value)}
       />
 
-      <button onClick={handleAuth} className="btn">
+      <button onClick={addUser} className="btn">
         {isSignUp ? "Sign Up" : "Log In"}
       </button>
     </div>
   );
 }
 
-export default App;
+export default LoginSignup;
