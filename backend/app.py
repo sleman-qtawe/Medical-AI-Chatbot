@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 import os
 import bcrypt
 from email_validator import validate_email, EmailNotValidError
-
+from flask import Flask, request, jsonify 
 # Load environment variables
 load_dotenv()
 
@@ -18,6 +18,8 @@ mongo = PyMongo(app)
 db = mongo.db  # Get the database
 users_collection = db.users  # Collection for users
 
+
+#sign_up 
 @app.route('/users', methods=['POST'])
 def addUsersFromSignUp():
     data = request.get_json()  
@@ -53,3 +55,21 @@ def addUsersFromSignUp():
 
     result = users_collection.insert_one(new_user)
     return jsonify({"message": "User added successfully", "id": str(result.inserted_id)}), 201
+
+#login
+@app.route('/login', methods=['POST'])
+def login():
+    data = request.get_json()
+
+    if "email" not in data or "password" not in data:
+        return jsonify({"error": "Email and password are required"}), 400
+
+    user = users_collection.find_one({"email": data["email"]})
+    
+    if user and bcrypt.checkpw(data["password"].encode('utf-8'), user["password"]):
+        return jsonify({"message": "Login successful", "username": user["username"]}), 200
+    else:
+        return jsonify({"error": "Invalid email or password"}), 401
+
+if __name__ == '__main__':
+    app.run(debug=True)

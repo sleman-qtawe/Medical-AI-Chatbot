@@ -1,58 +1,94 @@
 import { useState } from "react";
 import "./logIn_signUp.css";
 const apiurl = import.meta.env.VITE_API_URL;
+import { useNavigate } from "react-router-dom";
 
 function LoginSignup() {
+  const navigate = useNavigate(); 
   const [isSignUp, setIsSignUp] = useState(false);
   const [userId, setUserId] = useState("");
   const [userGender, setUserGender] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  const handleAuth = () => {
-    if (isSignUp) {
-      console.log("Signing Up:", { userId,username,userGender, email, password });
-    } else {
-      console.log("Logging In:", { email, password });
+  const checkAuth = () => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      setIsAuthenticated(true);
+      navigate("/dashboard");
     }
   };
 
-  const addUser=async()=>{
-    let newuser= {'username':username,
-      'userid':userId,
-      'userGender':userGender,
-      'email':email,
-      'password':password
+  const loginUser = async () => {
+    try {
+      const response = await fetch(`${apiurl}/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        localStorage.setItem("token", data.token);
+        console.log("Login successful:", data);
+        
+        setIsAuthenticated(true);
+  
+        navigate("/dashboard");
+      } else {
+        console.log("Login failed:", data.error);
+        alert(data.error);
+      }
+    } catch (error) {
+      console.log("Error logging in:", error);
+      alert("An error occurred while logging in.");
     }
+  };
+  
+  
+  // إضافة مستخدم جديد
+  const addUser = async () => {
+    const newUser = {
+      username,
+      userId,
+      userGender,
+      email,
+      password,
+    };
 
-    try{
-      const response=await fetch(`${apiurl}/users`,{
-        method:"POST",
+    try {
+      const response = await fetch(`${apiurl}/users`, {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",  
         },
-        body:JSON.stringify(newuser)
+        body: JSON.stringify(newUser),
       });
 
-      if(response.ok){
-        console.log("user added successfully")
-        setEmail("")
-        setUsername("")
-        setPassword("")
-        setUserGender("")
-        setUserId("")
-      }else{
-        console.log("faild added user")
+      if (response.ok) {
+        console.log("User added successfully");
+        setEmail("");
+        setUsername("");
+        setPassword("");
+        setUserGender("");
+        setUserId("");
+        setIsSignUp(false);
+      } else {
+        console.log("Failed to add user");
       }
-    }catch(error){
-      console.log("error adding user",error)
+    } catch (error) {
+      console.log("Error adding user:", error);
     }
-  }
+  };
 
   return (
     <div className="container">
-      {/* Navigation Bar with Buttons */}
       <div className="nav">
         <button 
           className={`nav-btn ${!isSignUp ? "active" : ""}`} 
@@ -70,36 +106,31 @@ function LoginSignup() {
 
       <h2>{isSignUp ? "Create an Account" : "Welcome Back"}</h2>
 
-      {/* Sign Up only shows the Username field */}
       {isSignUp && (
-  <>
-    <input
-      type="text"
-      className="input"
-      placeholder="ID"
-      value={userId}
-      onChange={(e) => setUserId(e.target.value)}
-    />
-    <input
-      type="text"
-      className="input"
-      placeholder="Full Name"
-      value={username}
-      onChange={(e) => setUsername(e.target.value)}
-    />
-    <input
-      type="text"
-      className="input"
-      placeholder="Gender"
-      value={userGender}
-      onChange={(e) => setUserGender(e.target.value)}
-    />
-  </>
-)}
-
-    
-   {/* Login shows the Email and Password fields */}
-
+        <>
+          <input
+            type="text"
+            className="input"
+            placeholder="ID"
+            value={userId}
+            onChange={(e) => setUserId(e.target.value)}
+          />
+          <input
+            type="text"
+            className="input"
+            placeholder="Full Name"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+          <input
+            type="text"
+            className="input"
+            placeholder="Gender"
+            value={userGender}
+            onChange={(e) => setUserGender(e.target.value)}
+          />
+        </>
+      )}
 
       <input
         type="email"
@@ -117,7 +148,7 @@ function LoginSignup() {
         onChange={(e) => setPassword(e.target.value)}
       />
 
-      <button onClick={addUser} className="btn">
+      <button onClick={isSignUp ? addUser : loginUser} className="btn">
         {isSignUp ? "Sign Up" : "Log In"}
       </button>
     </div>

@@ -1,4 +1,4 @@
-import React , { useState, useEffect } from 'react';
+import React , { useState } from 'react';
 import Doctors from '../Doctors/Doctors';
 import Healer from '../Healer/Healer';
 function Dropdowns() {
