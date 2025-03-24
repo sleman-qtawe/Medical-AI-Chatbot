@@ -1,39 +1,33 @@
-import { useState } from "react";
-import "./Doctors.css"; // Make sure to import the CSS
+import { useState, useEffect } from "react";
+import "./Doctors.css";
 import { FaEdit, FaTrash, FaEye } from 'react-icons/fa';
 
 export default function Doctors() {
-  const [doctors, setDoctors] = useState([
-    { id: 1, name: "Dr. Sleman", email: "sleman@example.com", phone: "050-1234567", specialty: "Cardiology" },
-    { id: 2, name: "Dr. Sara", email: "sara@example.com", phone: "053-8765432", specialty: "Pediatrics" },
-  ]);
+  const [doctors, setDoctors] = useState([]);
   const [editingDoctor, setEditingDoctor] = useState(null);
-  const [showModal, setShowModal] = useState(false); // For edit modal
-  const [showDetailsModal, setShowDetailsModal] = useState(false); // For doctor details modal
-  const [selectedDoctor, setSelectedDoctor] = useState(null); // Store the selected doctor for details view
+  const [showModal, setShowModal] = useState(false);
+  const [showDetailsModal, setShowDetailsModal] = useState(false);
+  const [selectedDoctor, setSelectedDoctor] = useState(null);
 
+  useEffect(() => {
+    fetch("http://127.0.0.1:5000/doctors")
+      .then((res) => res.json())
+      .then((data) => setDoctors(data));
+  }, []);
+
+  
   const deleteDoctor = (id) => {
-    setDoctors(doctors.filter((doc) => doc.id !== id));
+    setDoctors(doctors.filter((doc) => doc._id !== id));
   };
 
   const startEditing = (doctor) => {
     setEditingDoctor(doctor);
-    setShowModal(true); // Show the edit modal
-  };
-
-  const updateDoctor = (updatedDoctor) => {
-    setDoctors(
-      doctors.map((doc) =>
-        doc.id === updatedDoctor.id ? { ...doc, ...updatedDoctor } : doc
-      )
-    );
-    setShowModal(false); // Close edit modal after update
-    setEditingDoctor(null);
+    setShowModal(true);
   };
 
   const showDetails = (doctor) => {
     setSelectedDoctor(doctor);
-    setShowDetailsModal(true); // Show the details modal
+    setShowDetailsModal(true);
   };
 
   return (
@@ -42,19 +36,19 @@ export default function Doctors() {
         <thead className="table-light">
           <tr>
             <th>Actions</th>
-            <th>Name</th> 
+            <th>Name</th>
             <th>Phone</th>
             <th>View</th>
           </tr>
         </thead>
         <tbody>
           {doctors.map((doctor) => (
-            <tr key={doctor.id}>
+            <tr key={doctor._id}>
               <td>
                 <button className="btn btn-custom btn-sm mx-1" onClick={() => startEditing(doctor)}>
                   <FaEdit />
                 </button>
-                <button onClick={() => deleteDoctor(doctor.id)} className="btn btn-danger btn-sm mx-1">
+                <button onClick={() => deleteDoctor(doctor._id)} className="btn btn-danger btn-sm mx-1">
                   <FaTrash />
                 </button>
               </td>
@@ -70,7 +64,6 @@ export default function Doctors() {
         </tbody>
       </table>
 
-      {/* Modal for editing a doctor */}
       {showModal && editingDoctor && (
         <div className="edit-modal-overlay">
           <div className="edit-modal">
@@ -79,13 +72,28 @@ export default function Doctors() {
               onSubmit={(e) => {
                 e.preventDefault();
                 const updatedDoctor = {
-                  id: editingDoctor.id,
                   name: e.target.elements.namedItem("name").value,
                   email: e.target.elements.namedItem("email").value,
                   phone: e.target.elements.namedItem("phone").value,
                   specialty: e.target.elements.namedItem("specialty").value,
                 };
-                updateDoctor(updatedDoctor);
+
+                fetch(`http://127.0.0.1:5000/update/doctors/${editingDoctor._id}`, {
+                  method: "PATCH",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify(updatedDoctor),
+                })
+                  .then((res) => res.json())
+                  .then(() => {
+                    alert("Doctor updated successfully!");
+                    setShowModal(false);
+                    setEditingDoctor(null);
+                    // تحديث البيانات بعد التعديل
+                    fetch("http://127.0.0.1:5000/doctors")
+                      .then((res) => res.json())
+                      .then((data) => setDoctors(data));
+                  })
+                  .catch(() => alert("Error updating doctor"));
               }}
             >
               <input
@@ -125,7 +133,6 @@ export default function Doctors() {
         </div>
       )}
 
-      {/* Modal for showing doctor details */}
       {showDetailsModal && selectedDoctor && (
         <div className="edit-modal-overlay">
           <div className="edit-modal">
