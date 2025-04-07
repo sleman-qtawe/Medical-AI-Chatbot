@@ -52,7 +52,6 @@ function LoginSignup() {
   };
   
   
-  // إضافة مستخدم جديد
   const addUser = async () => {
     const newUser = {
       username,
