@@ -11,7 +11,7 @@ function LoginSignup() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  
+
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const checkAuth = () => {
@@ -31,15 +31,13 @@ function LoginSignup() {
         },
         body: JSON.stringify({ email, password }),
       });
-  
+
       const data = await response.json();
-  
+
       if (response.ok) {
         localStorage.setItem("token", data.token);
         console.log("Login successful:", data);
-        
         setIsAuthenticated(true);
-  
         navigate("/dashboard");
       } else {
         console.log("Login failed:", data.error);
@@ -50,19 +48,18 @@ function LoginSignup() {
       alert("An error occurred while logging in.");
     }
   };
-  
-  
+
   const addUser = async () => {
     const newUser = {
       username,
-      userId,
+      userid: userId,
       userGender,
       email,
       password,
     };
 
     try {
-      const response = await fetch(`${apiurl}/users`, {
+      const response = await fetch(`${apiurl}/patients`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",  
@@ -70,8 +67,11 @@ function LoginSignup() {
         body: JSON.stringify(newUser),
       });
 
+      const data = await response.json();
+
       if (response.ok) {
         console.log("User added successfully");
+        alert("Account created successfully!");
         setEmail("");
         setUsername("");
         setPassword("");
@@ -79,10 +79,12 @@ function LoginSignup() {
         setUserId("");
         setIsSignUp(false);
       } else {
-        console.log("Failed to add user");
+        console.log("Failed to add user:", data.error);
+        alert(`Failed: ${data.error}`);
       }
     } catch (error) {
       console.log("Error adding user:", error);
+      alert("Something went wrong.");
     }
   };
 
@@ -121,13 +123,16 @@ function LoginSignup() {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
-          <input
-            type="text"
+          <select
             className="input"
-            placeholder="Gender"
             value={userGender}
             onChange={(e) => setUserGender(e.target.value)}
-          />
+            placeholder="Select Gender"
+          >
+           <option placeholder="Select Gender" ></option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select>
         </>
       )}
 

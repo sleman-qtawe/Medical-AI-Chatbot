@@ -1,36 +1,22 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-
-import Login from "./components/logIn_signUp/login_signUp";
-import PrivateRoute from "./components/PrivateRoute";
-
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom"; 
 import DrawerNavAdmin from "./components/Navigations/DrawerNavAdmin";
-import AddDoctors from "./components/Doctors/Doctors";
-import DropdownsPage from "./components/Dropdowns/Dropdowns";
+import AddDoctors  from "./components/addDoctor/addDoctor.jsx"; 
+import Doctors from "./components/Doctors/Doctors.jsx";
 
-import SidebarPatient from "./components/Patient/SidebarPatient";
+
 
 function App() {
   return (
     <Router>
-      <Routes>
-
-        <Route path="/login" element={<Login />} />
-
-        <Route path="/dashboard/*" element={
-          <PrivateRoute>
-            <DrawerNavAdmin />
-          </PrivateRoute>
-        } />
-
-        <Route path="/profile" element={<SidebarPatient />} />
-        <Route path="/chat" element={<SidebarPatient />} />
-        <Route path="/appointments" element={<SidebarPatient />} />
-        <Route path="/logout" element={<SidebarPatient />} />
-
-        <Route path="/" element={<Navigate to="/login" />} />
-
-      </Routes>
+      <div>
+        <DrawerNavAdmin />
+        <Routes>
+          <Route path="/" element={""} />
+          <Route path="/adddoctors" element={<AddDoctors />} />
+          <Route path="/doctors" element={<Doctors />} />
+        </Routes>
+      </div>
     </Router>
   );
 }

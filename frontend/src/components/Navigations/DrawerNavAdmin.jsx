@@ -1,9 +1,18 @@
 import React, { useState } from "react";
-import { Drawer, List, ListItem, ListItemText, IconButton } from "@mui/material";
+import {
+  Drawer,
+  List,
+  ListItem,
+  ListItemText,
+  IconButton,
+} from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars, faUserEdit, faUserPlus } from "@fortawesome/free-solid-svg-icons";
+import {
+  faBars,
+  faUserEdit,
+  faUserPlus,
+} from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
-
 
 const DrawerNavAdmin = () => {
   const [open, setOpen] = useState(false);
@@ -11,33 +20,41 @@ const DrawerNavAdmin = () => {
   const [hovered, setHovered] = useState({
     EditUsers: false,
     AddDoctors: false,
+    Doctors: false,
   });
 
+  // Handle mouse enter and leave for hover effect
   const handleMouseEnter = (page) => {
-    setHovered((prevState) => ({
-      ...prevState,
-      [page]: true,
-    }));
+    setHovered((prev) => ({ ...prev, [page]: true }));
   };
 
   const handleMouseLeave = (page) => {
-    setHovered((prevState) => ({
-      ...prevState,
-      [page]: false,
-    }));
+    setHovered((prev) => ({ ...prev, [page]: false }));
   };
 
   return (
     <>
-      <IconButton onClick={() => setOpen(true)} style={{ color: "#0fa4af" }}>
+      <IconButton onClick={() => setOpen(true)} sx={{ color: "#0fa4af" }}>
         <FontAwesomeIcon icon={faBars} />
       </IconButton>
 
       <Drawer open={open} onClose={() => setOpen(false)} anchor="left">
-        <List style={{ width: "250px", padding: "10px" }}>
+        <List sx={{ width: "250px", padding: "10px" }}>
+        <ListItem
+            role="button"
+            component={Link}
+            to="/doctors"
+            onClick={() => setOpen(false)}
+            onMouseEnter={() => handleMouseEnter("Doctors")}
+            onMouseLeave={() => handleMouseLeave("Doctors")}
+            style={hovered.Doctors ? styles.hoveredItem : styles.listItem}
+          >
+            <FontAwesomeIcon icon={faUserPlus} style={styles.icon} />
+            <ListItemText primary="Doctors" style={styles.listItemText} />
+          </ListItem>
 
           <ListItem
-            button
+            role="button"
             component={Link}
             to="/"
             onClick={() => setOpen(false)}
@@ -46,11 +63,11 @@ const DrawerNavAdmin = () => {
             style={hovered.EditUsers ? styles.hoveredItem : styles.listItem}
           >
             <FontAwesomeIcon icon={faUserEdit} style={styles.icon} />
-            <ListItemText primary="EditUsers" style={styles.listItemText} />
+            <ListItemText primary="Edit Users" style={styles.listItemText} />
           </ListItem>
 
           <ListItem
-            button
+            role="button"
             component={Link}
             to="/adddoctors"
             onClick={() => setOpen(false)}
@@ -59,8 +76,10 @@ const DrawerNavAdmin = () => {
             style={hovered.AddDoctors ? styles.hoveredItem : styles.listItem}
           >
             <FontAwesomeIcon icon={faUserPlus} style={styles.icon} />
-            <ListItemText primary="AddDoctors" style={styles.listItemText} />
+            <ListItemText primary="Add Doctors" style={styles.listItemText} />
           </ListItem>
+          
+          
         </List>
       </Drawer>
     </>
@@ -73,26 +92,26 @@ const styles = {
     alignItems: "center",
     padding: "10px 20px",
     borderRadius: "4px",
-    transition: "background-color 0.3s ease, transform 0.3s ease",
+    transition: "background-color 0.3s ease, transform 0.3s ease", // Animation on hover
   },
   hoveredItem: {
     display: "flex",
     alignItems: "center",
     padding: "10px 20px",
     borderRadius: "4px",
-    backgroundColor: "#0fa4af",
-    transform: "scale(1.05)", 
-    transition: "background-color 0.3s ease, transform 0.3s ease",
+    backgroundColor: "#0fa4af",  // Change background color on hover
+    transform: "scale(1.05)",  // Slightly enlarge the item on hover
+    transition: "background-color 0.3s ease, transform 0.3s ease", // Smooth animation
   },
   listItemText: {
     marginLeft: "10px",
     fontSize: "16px",
     fontWeight: "500",
-    color: "#333", 
+    color: "#333",
   },
   icon: {
     fontSize: "20px",
-    color: "#333", 
+    color: "#333",
   },
 };
 

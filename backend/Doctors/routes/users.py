@@ -3,9 +3,9 @@ from email_validator import validate_email, EmailNotValidError
 import bcrypt
 
 def register_user_routes(app, db):
-    users_collection = db["users"]
+    users_collection = db["patients"]
 
-    @app.route('/users', methods=['POST'])
+    @app.route('/patients', methods=['POST'])
     def add_user():
         data = request.get_json()
         required_fields = ["username", "userid", "email", "password", "userGender"]
