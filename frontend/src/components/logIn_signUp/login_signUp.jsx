@@ -23,21 +23,27 @@ function LoginSignup() {
         },
         body: JSON.stringify({ email, password }),
       });
-
+  
       const data = await response.json();
-
+  
       if (response.ok) {
         localStorage.setItem("token", data.token);
+  
         console.log("Login successful:", data);
         setIsAuthenticated(true);
-
-
-        if (data.role === "admin") {
-          navigate("/DrawerNavAdmin");
-        } else if(data.role==="patient") {
-          navigate("./DrawerNavPatient");
-        }else if (data.role=='doctor'){
-          navigate("./DrawerNavDoctor")
+  
+        // تأكد من أن role موجود في البيانات التي تم استرجاعها
+        const role = data.user.role;
+  
+        if (role === "admin") {
+          navigate("/RoutDrawer"); // توجيه إلى "admin"
+        } else if (role === "patient") {
+          navigate("/DrawerNavPatient"); // توجيه إلى "patient"
+        } else if (role === "doctor") {
+          navigate("/DrawerNavDoctor"); // توجيه إلى "doctor"
+        } else {
+          console.log("Role not recognized");
+          alert("Role not recognized");
         }
       } else {
         console.log("Login failed:", data.error);
@@ -48,6 +54,8 @@ function LoginSignup() {
       alert("An error occurred while logging in.");
     }
   };
+  
+  
 
   const addUser = async () => {
     const newUser = {

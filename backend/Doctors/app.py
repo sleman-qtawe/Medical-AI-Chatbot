@@ -3,7 +3,7 @@ from flask_cors import CORS
 from utils.db import init_db
 from routes.doctors import register_doctor_routes
 from routes.users import register_user_routes
-from Login.login import check_valid_email
+from routes.login import check_valid_email
 
 
 app = Flask(__name__)

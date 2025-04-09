@@ -36,8 +36,7 @@ def register_user_routes(app, db):
         result = users_collection.insert_one(new_user)
         return jsonify({"message": "User created", "id": str(result.inserted_id)}), 201
 
-    @app.route('/login', methods=['POST'])
-    def login():
+
         data = request.get_json()
         if "email" not in data or "password" not in data:
             return jsonify({"error": "Email and password required"}), 400

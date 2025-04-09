@@ -1,9 +1,9 @@
 import React from "react";
 import LoginSignup from "./components/logIn_signUp/login_signUp.jsx";
-import  DrawerNavDoctor  from "./components/Navigations/DrawerNavDoctor.jsx";
-import  DrawerNavPatient  from "./components/Navigations/DrawerNavPatient.jsx";
-import DrawerNavAdmin from "./components/Navigations/DrawerNavAdmin.jsx";
+import RoutDrawerPatient from "./components/Navigations/RoutDrawerPatient.jsx";
+import RoutDrawerDoctor from "./components/Navigations/RoutDrawerDoctor.jsx";
 import { Routes, Route } from "react-router-dom";
+import RoutDrawer from "./components/Navigations/RoutDrawerAdmin.jsx";
 
 
 
@@ -11,9 +11,9 @@ function App() {
   return (
     <Routes>
     <Route path="/" element={<LoginSignup />} />
-    <Route path="/DrawerNavAdmin" element={<DrawerNavAdmin />} />
-    <Route path="/DrawerNavPatient" element={<DrawerNavPatient />} />
-    <Route path="/DrawerNavDoctor" element={<DrawerNavDoctor />} />
+    <Route path="/*" element={<RoutDrawer/>} />
+    <Route path="/*" element={<RoutDrawerDoctor />} />
+    <Route path="/*" element={<RoutDrawerPatient/>} />
   </Routes>
   );
 }
