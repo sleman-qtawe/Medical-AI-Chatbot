@@ -1,23 +1,20 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom"; 
-import DrawerNavAdmin from "./components/Navigations/DrawerNavAdmin";
-import AddDoctors  from "./components/addDoctor/addDoctor.jsx"; 
-import Doctors from "./components/Doctors/Doctors.jsx";
+import LoginSignup from "./components/logIn_signUp/login_signUp.jsx";
+import  DrawerNavDoctor  from "./components/Navigations/DrawerNavDoctor.jsx";
+import  DrawerNavPatient  from "./components/Navigations/DrawerNavPatient.jsx";
+import DrawerNavAdmin from "./components/Navigations/DrawerNavAdmin.jsx";
+import { Routes, Route } from "react-router-dom";
 
 
 
 function App() {
   return (
-    <Router>
-      <div>
-        <DrawerNavAdmin />
-        <Routes>
-          <Route path="/" element={""} />
-          <Route path="/adddoctors" element={<AddDoctors />} />
-          <Route path="/doctors" element={<Doctors />} />
-        </Routes>
-      </div>
-    </Router>
+    <Routes>
+    <Route path="/" element={<LoginSignup />} />
+    <Route path="/DrawerNavAdmin" element={<DrawerNavAdmin />} />
+    <Route path="/DrawerNavPatient" element={<DrawerNavPatient />} />
+    <Route path="/DrawerNavDoctor" element={<DrawerNavDoctor />} />
+  </Routes>
   );
 }
 

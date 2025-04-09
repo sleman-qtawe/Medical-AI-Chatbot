@@ -1,26 +1,18 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";  
 import "./logIn_signUp.css";
+
 const apiurl = import.meta.env.VITE_API_URL;
-import { useNavigate } from "react-router-dom";
 
 function LoginSignup() {
-  const navigate = useNavigate(); 
   const [isSignUp, setIsSignUp] = useState(false);
   const [userId, setUserId] = useState("");
   const [userGender, setUserGender] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  const checkAuth = () => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      setIsAuthenticated(true);
-      navigate("/dashboard");
-    }
-  };
+  const [isAuthenticated, setIsAuthenticated] = useState(false); 
+  const navigate = useNavigate(); 
 
   const loginUser = async () => {
     try {
@@ -38,7 +30,15 @@ function LoginSignup() {
         localStorage.setItem("token", data.token);
         console.log("Login successful:", data);
         setIsAuthenticated(true);
-        navigate("/dashboard");
+
+
+        if (data.role === "admin") {
+          navigate("/DrawerNavAdmin");
+        } else if(data.role==="patient") {
+          navigate("./DrawerNavPatient");
+        }else if (data.role=='doctor'){
+          navigate("./DrawerNavDoctor")
+        }
       } else {
         console.log("Login failed:", data.error);
         alert(data.error);
@@ -127,9 +127,8 @@ function LoginSignup() {
             className="input"
             value={userGender}
             onChange={(e) => setUserGender(e.target.value)}
-            placeholder="Select Gender"
           >
-           <option placeholder="Select Gender" ></option>
+            <option value="">Select Gender</option>
             <option value="Male">Male</option>
             <option value="Female">Female</option>
           </select>
@@ -152,9 +151,11 @@ function LoginSignup() {
         onChange={(e) => setPassword(e.target.value)}
       />
 
-      <button onClick={isSignUp ? addUser : loginUser} className="btn">
-        {isSignUp ? "Sign Up" : "Log In"}
-      </button>
+      {isSignUp ? (
+        <button onClick={addUser} className="btn">Sign Up</button>
+      ) : (
+        <button onClick={loginUser} className="btn">Log In</button>
+      )}
     </div>
   );
 }
