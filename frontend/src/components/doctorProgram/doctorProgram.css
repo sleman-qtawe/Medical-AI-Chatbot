@@ -1,0 +1,132 @@
+/* doctorProgram.css */
+
+.react-calendar {
+  width: 100%;
+  max-width: 600px;
+  margin: auto;
+  background-color: white;
+  border: none;
+  border-radius: 12px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+}
+
+.container {
+  background-color: white;  /* White background for the container */
+  padding: 20px;            /* Padding for the container */
+  border-radius: 8px;       /* Optional rounded corners */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional shadow */
+  max-width: 1200px;        /* Set max width for responsiveness */
+  margin: 0 auto;           /* Center the container */
+}
+
+h3 {
+  color: #0fa4af;           /* Blue color for headings */
+}
+
+/* Navigation (month/year, arrows) */
+.react-calendar__navigation {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.react-calendar__navigation button {
+  background-color: #0fa4af;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.react-calendar__navigation button:hover {
+  background-color: #0d8e98;
+}
+
+/* Weekday headers */
+.react-calendar__month-view__weekdays {
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: #0fa4af;
+  border-bottom: 1px solid #e0e0e0;
+  margin-bottom: 0.5rem;
+}
+
+.react-calendar__month-view__weekdays__weekday {
+  padding: 0.5rem 0;
+}
+
+/* Date tiles */
+.react-calendar__tile {
+  border-radius: 10px;
+  padding: 10px 0;
+  text-align: center;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.react-calendar__tile--now {
+  background-color: #d1f4f7; /* light teal for today */
+  font-weight: bold;
+}
+
+.react-calendar__tile--active {
+  background-color: #0fa4af;
+  color: white;
+  font-weight: bold;
+}
+
+.react-calendar__tile--hasActive {
+  background-color: #0d8e98;
+  color: white;
+}
+
+/* Hover effect */
+.react-calendar__tile:hover {
+  background-color: #b2e7ea;
+}
+
+/* Optional: focus outline off */
+.react-calendar__tile:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #0fa4af;
+}
+
+/* Table Container */
+.table-container {
+  border: 2px solid #0fa4af;  /* Blue border around the table */
+  padding: 20px;               /* Padding between the table and the border */
+  border-radius: 8px;          /* Optional rounded corners for the table container */
+  margin-top: 20px;            /* Space above the table */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for the table container */
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table th,
+table td {
+  padding: 15px;             /* Space inside the table cells */
+  text-align: left;          /* Align text to the left */
+  border: 1px solid #ddd;    /* Border around table cells */
+}
+
+table th {
+  background-color: #0fa4af;  /* Blue background for header */
+  color: white;               /* White text for header */
+}
+
+table tr:nth-child(even) {
+  background-color: #f9f9f9;  /* Alternate row background */
+}
+
+table tr:hover {
+  background-color: #e6f7fa;  /* Light blue hover effect */
+}

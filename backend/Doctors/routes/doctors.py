@@ -1,10 +1,11 @@
 from flask import request, jsonify
 from bson import ObjectId
 from email_validator import validate_email, EmailNotValidError
-import bcrypt
+import bcrypt 
 
 def register_doctor_routes(app, db):
     doctors_collection = db["doctors"]
+    departments_collection = db["departments"]
 
     @app.route('/doctors', methods=['GET'])
     def get_doctors():
@@ -46,12 +47,6 @@ def register_doctor_routes(app, db):
         result = doctors_collection.insert_one(new_user)
         return jsonify({"message": "User created", "id": str(result.inserted_id)}), 201
 
-
-    
-        data = request.json
-        doctors_collection.insert_one(data)
-        return jsonify({"message": "Doctor added"}), 201
-
     @app.route('/doctors/<doctor_id>', methods=['PATCH'])
     def update_doctor(doctor_id):
         data = request.json
@@ -59,3 +54,29 @@ def register_doctor_routes(app, db):
         if result.matched_count == 0:
             return jsonify({"error": "Doctor not found"}), 404
         return jsonify({"message": "Doctor updated"}), 200
+    
+    
+    @app.route('/addDepartment', methods=['POST'])
+    def add_department():
+     data = request.get_json()
+     print(f"Received data: {data}")  # Add this log line
+    
+     required_fields = ["name", "building", "floor", "rooms"]
+     if not all(field in data for field in required_fields):
+        return jsonify({"error": "Missing required fields"}), 400
+
+    # Check if the department already exists
+     if departments_collection.find_one({"name": data["name"]}):
+        return jsonify({"error": "Department already exists"}), 400
+
+    # Create a new department object and insert it into the database
+     new_department = {
+        "name": data["name"],
+        "building": data["building"],
+        "floor": data["floor"],
+        "rooms": data["rooms"]
+      }
+
+     result = departments_collection.insert_one(new_department)
+     return jsonify({"message": "Department created", "name": str(result.inserted_id)}), 201
+
