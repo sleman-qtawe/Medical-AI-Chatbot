@@ -3,10 +3,17 @@ import { Link, useLocation } from "react-router-dom";
 import { FaBars, FaHome, FaComments, FaCalendarAlt, FaSignOutAlt } from "react-icons/fa";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import "./SidebarPatient.css";
+import {
+  FaHospital,
+  FaStethoscope,
+  FaCalendarCheck,
+  FaInfoCircle
+} from "react-icons/fa";
 
 const SidebarPatient = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [editMode, setEditMode] = useState(false);
+  const [userId, setUserId] = useState("123456789");
   const [name, setName] = useState("Layla Hassan");
   const [email, setEmail] = useState("layla@example.com");
   const [phone, setPhone] = useState("050-1234567");
@@ -36,6 +43,7 @@ const SidebarPatient = () => {
     };
   }, [isOpen]);
 
+
   return (
     <div className="layout-container">
       <div className="sidebar-patient" ref={sidebarRef}>
@@ -44,8 +52,6 @@ const SidebarPatient = () => {
   <div className="menu-toggle" onClick={() => setIsOpen(!isOpen)} ref={toggleRef}>
   <FaBars />
 </div>
-
-  
 
   {location.pathname === "/profile" && <h2>Patient Profile</h2>}
 
@@ -68,12 +74,14 @@ const SidebarPatient = () => {
               <Link to="/chat"><FaComments /> Chat with Bot</Link>
             </li>
             <li className={location.pathname === "/appointments" ? "active" : ""}>
-              <Link to="/appointments"><FaCalendarAlt /> My Appointments</Link>
-            </li>
+  <Link to="/appointments"><FaCalendarAlt /> My Appointments</Link>
+</li>
+  
             <li>
               <Link to="/logout"><FaSignOutAlt /> Logout</Link>
             </li>
           </ul>
+        
         )}
 
         <div className="healer-card">
@@ -99,7 +107,9 @@ const SidebarPatient = () => {
           }}
         />
       )}
-    </div>
+    </div>    
+              
+              <div className="info-row non-editable-id"><strong>ID:</strong> {userId ? userId : "loading..."}</div>
               <div className="info-row"><FaHome className="icon" /> {editMode ? <input value={name} onChange={(e) => setName(e.target.value)} /> : name}</div>
               <div className="info-row"><FaComments className="icon" /> {editMode ? <input value={email} onChange={(e) => setEmail(e.target.value)} /> : email}</div>
               <div className="info-row"><FaCalendarAlt className="icon" /> {editMode ? <input value={phone} onChange={(e) => setPhone(e.target.value)} /> : phone}</div>
@@ -116,7 +126,55 @@ const SidebarPatient = () => {
           toggleRef={toggleRef}
   />
 )}
-          {location.pathname === "/appointments" && <h3>Appointments</h3>}
+         {location.pathname === "/appointments" && (
+  <>
+    {[
+      {
+        hospital: "Rambam Medical Center",
+        department: "Dermatology",
+        date: "2025-04-15 10:30",
+        reason: "Skin rash diagnosis",
+      },
+      {
+        hospital: "Hadassah Ein Kerem",
+        department: "Cardiology",
+        date: "2025-04-18 09:00",
+        reason: "Heart rate monitoring",
+      },
+      {
+        hospital: "Sheba Tel Hashomer",
+        department: "Orthopedics",
+        date: "2025-04-20 14:00",
+        reason: "Knee pain consultation",
+      },
+    ].map((role, index) => (
+      <div
+        className="info-row"
+        key={index}
+        style={{ flexDirection: "column", alignItems: "flex-start" }}
+      >
+        <div>
+          <FaHospital className="icon" /> <strong>{role.hospital}</strong>
+        </div>
+        <div>
+          <FaStethoscope className="icon" /> {role.department}
+        </div>
+        <div>
+          <FaCalendarCheck className="icon" /> {role.date}
+        </div>
+        <div>
+          <FaInfoCircle className="icon" /> {role.reason}
+        </div>
+        <button
+          className="cancel-btn"
+          onClick={() => alert(`Canceled appointment at ${role.hospital}`)}
+        >
+          Cancel Appointment
+        </button>
+      </div>
+    ))}
+  </>
+)}
         </div>
       </div>
     </div>
