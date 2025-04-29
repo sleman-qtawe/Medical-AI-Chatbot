@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";  
+import { useNavigate } from "react-router-dom";
 import "./logIn_signUp.css";
 
 const apiurl = import.meta.env.VITE_API_URL;
@@ -11,8 +11,12 @@ function LoginSignup() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isAuthenticated, setIsAuthenticated] = useState(false); 
-  const navigate = useNavigate(); 
+  const [phone, setPhone] = useState("");
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [otp, setOtp] = useState(0); // حالة لتخزين الـ OTP المدخل
+  const [isOtpModalOpen, setIsOtpModalOpen] = useState(false); // حالة لفتح المودال
+  const [isOtpVerified, setIsOtpVerified] = useState(false); // حالة للتحقق من الـ OTP
+  const navigate = useNavigate();
 
   const loginUser = async () => {
     try {
@@ -23,27 +27,19 @@ function LoginSignup() {
         },
         body: JSON.stringify({ email, password }),
       });
-  
+
       const data = await response.json();
-  
+
       if (response.ok) {
         localStorage.setItem("token", data.token);
-  
         console.log("Login successful:", data);
-        setIsAuthenticated(true);
-  
-        // تأكد من أن role موجود في البيانات التي تم استرجاعها
-        const role = data.user.role;
-  
-        if (role === "admin") {
-          navigate("/RoutDrawer"); // توجيه إلى "admin"
-        } else if (role === "patient") {
-          navigate("/DrawerNavPatient"); // توجيه إلى "patient"
-        } else if (role === "doctor") {
-          navigate("/DrawerNavDoctor"); // توجيه إلى "doctor"
+
+       
+        if (data.verified === false) {
+          setIsOtpModalOpen(true); 
         } else {
-          console.log("Role not recognized");
-          alert("Role not recognized");
+          setIsAuthenticated(true);
+          navigateBasedOnRole(data.user.role);
         }
       } else {
         console.log("Login failed:", data.error);
@@ -54,7 +50,44 @@ function LoginSignup() {
       alert("An error occurred while logging in.");
     }
   };
-  
+
+  const verifyOtp = async () => {
+    try {
+      const response = await fetch(`${apiurl}/verify-otp`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ phone: phone, code: otp }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setIsOtpVerified(true);
+        setIsOtpModalOpen(false); 
+        navigateBasedOnRole(data.user.role);
+      } else {
+        alert("Invalid OTP");
+      }
+    } catch (error) {
+      console.log("Error verifying OTP:", error);
+      alert("Something went wrong during OTP verification.");
+    }
+  };
+
+  const navigateBasedOnRole = (role) => {
+    if (role === "admin") {
+      navigate("/admin");
+    } else if (role === "patient") {
+      navigate("/patient");
+    } else if (role === "doctor") {
+      navigate("/doctor");
+    } else {
+      console.log("Role not recognized");
+      alert("Role not recognized");
+    }
+  };
   
 
   const addUser = async () => {
@@ -64,13 +97,14 @@ function LoginSignup() {
       userGender,
       email,
       password,
+      phone,
     };
 
     try {
       const response = await fetch(`${apiurl}/patients`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",  
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(newUser),
       });
@@ -85,6 +119,7 @@ function LoginSignup() {
         setPassword("");
         setUserGender("");
         setUserId("");
+        setPhone("")
         setIsSignUp(false);
       } else {
         console.log("Failed to add user:", data.error);
@@ -99,14 +134,14 @@ function LoginSignup() {
   return (
     <div className="container">
       <div className="nav">
-        <button 
-          className={`nav-btn ${!isSignUp ? "active" : ""}`} 
+        <button
+          className={`nav-btn ${!isSignUp ? "active" : ""}`}
           onClick={() => setIsSignUp(false)}
         >
           Log In
         </button>
-        <button 
-          className={`nav-btn ${isSignUp ? "active" : ""}`} 
+        <button
+          className={`nav-btn ${isSignUp ? "active" : ""}`}
           onClick={() => setIsSignUp(true)}
         >
           Sign Up
@@ -130,6 +165,13 @@ function LoginSignup() {
             placeholder="Full Name"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+          />
+           <input
+            type="tel"
+            className="input"
+            placeholder="Phone (e.g. +972...)"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
           />
           <select
             className="input"
@@ -163,6 +205,23 @@ function LoginSignup() {
         <button onClick={addUser} className="btn">Sign Up</button>
       ) : (
         <button onClick={loginUser} className="btn">Log In</button>
+      )}
+
+      {/* Modal for OTP verification */}
+      {isOtpModalOpen && (
+        <div className="otp-modal">
+          <div className="modal-content">
+            <h3>Enter OTP</h3>
+            <input
+              type="number"
+              value={otp}
+              onChange={(e) => setOtp(e.target.value)}
+              placeholder="Enter OTP"
+              className="input"
+            />
+            <button onClick={verifyOtp} className="btn">Verify OTP</button>
+          </div>
+        </div>
       )}
     </div>
   );

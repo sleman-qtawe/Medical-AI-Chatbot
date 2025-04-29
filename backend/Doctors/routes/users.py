@@ -8,7 +8,7 @@ def register_user_routes(app, db):
     @app.route('/patients', methods=['POST'])
     def add_user():
         data = request.get_json()
-        required_fields = ["username", "userid", "email", "password", "userGender"]
+        required_fields = ["username", "userid", "email", "password", "userGender" , "phone"]
         if not all(field in data for field in required_fields):
             return jsonify({"error": "Missing required fields"}), 400
 
@@ -30,18 +30,14 @@ def register_user_routes(app, db):
             "userid": data["userid"],
             "email": data["email"],
             "password": hashed_password,
-            "userGender": data["userGender"]
+            "userGender": data["userGender"],
+            "phone":data["phone"]
         }
 
         result = users_collection.insert_one(new_user)
         return jsonify({"message": "User created", "id": str(result.inserted_id)}), 201
+       
 
 
-        data = request.get_json()
-        if "email" not in data or "password" not in data:
-            return jsonify({"error": "Email and password required"}), 400
-
-        user = users_collection.find_one({"email": data["email"]})
-        if user and bcrypt.checkpw(data["password"].encode('utf-8'), user["password"]):
-            return jsonify({"message": "Login successful", "username": user["username"]}), 200
-        return jsonify({"error": "Invalid credentials"}), 401
+ 
+      

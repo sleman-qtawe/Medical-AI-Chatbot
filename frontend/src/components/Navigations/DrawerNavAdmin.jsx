@@ -20,6 +20,7 @@ const DrawerNavAdmin = () => {
     EditUsers: false,
     AddDoctors: false,
     Doctors: false,
+    NewChatBot:false,
   });
 
   // Handle mouse enter and leave for hover effect
@@ -53,7 +54,7 @@ const DrawerNavAdmin = () => {
           <ListItem
             role="button"
             component={Link}
-            to="/Doctors"
+            to="Doctors"
             onClick={() => setOpen(false)}
             onMouseEnter={() => handleMouseEnter("Doctors")}
             onMouseLeave={() => handleMouseLeave("Doctors")}
@@ -69,7 +70,24 @@ const DrawerNavAdmin = () => {
           <ListItem
             role="button"
             component={Link}
-            to="/AddDoctor"
+            to="NewChatBot"
+            onClick={() => setOpen(false)}
+            onMouseEnter={() => handleMouseEnter("NewChatBot")}
+            onMouseLeave={() => handleMouseLeave("NewChatBot")}
+            style={hovered.NewChatBot? styles.hoveredItem : styles.listItem}
+          >
+            <FontAwesomeIcon icon={faUserPlus} style={styles.icon} />
+            <ListItemText 
+              primary="NewChatBot" 
+              style={styles.listItemText} 
+            />
+          </ListItem>
+
+
+          <ListItem
+            role="button"
+            component={Link}
+            to="AddDoctor"
             onClick={() => setOpen(false)}
             onMouseEnter={() => handleMouseEnter("AddDoctors")}
             onMouseLeave={() => handleMouseLeave("AddDoctors")}

@@ -18,7 +18,7 @@ def register_doctor_routes(app, db):
     @app.route('/doctors', methods=['POST'])
     def add_doctor():
         data = request.get_json()
-        required_fields = ["id", "name", "email","speciality", "password" ]
+        required_fields = ["id", "name", "email","speciality", "password","phone" ]
         if not all(field in data for field in required_fields):
             return jsonify({"error": "Missing required fields"}), 400
 
@@ -40,7 +40,8 @@ def register_doctor_routes(app, db):
             "name": data["name"],
             "email": data["email"],
             "speciality": data["speciality"],
-            "password": hashed_password
+            "password": hashed_password,
+            "phone":data["phone"]
             
         }
 

@@ -8,26 +8,24 @@ import { Routes, Route } from "react-router-dom";
 import RoutDrawer from "./components/Navigations/RoutDrawerAdmin.jsx";
 import CalendarPage from "./components/doctorProgram/CalenderPage.jsx";
 import AppointmentsPage from "./components/doctorProgram/AppointmentsPage.jsx";
-import SidebarPatient from "./components/Patient/SidebarPatient";
+import ChatBot from "./components/ChatBot/chatBot.jsx";
+
 
 
 function App() {
   return (
     
-  
+  /*
    <Routes>
     <Route path="/" element={<LoginSignup />} />
     <Route path="/*" element={<RoutDrawer/>} />
     <Route path="/*" element={<RoutDrawerDoctor />} />
     <Route path="/*" element={<RoutDrawerPatient/>} />  
-      <Route path="/" element={<CalendarPage />} />
-      <Route path="/appointments/:date" element={<AppointmentsPage />} />
-    <Route path="/" element={<AddDepartment />} />
 
-    <Route path="/profile" element={<SidebarPatient />} />
-        <Route path="/chat" element={<SidebarPatient />} />
-        <Route path="/appointments" element={<SidebarPatient />} />
-        <Route path="/logout" element={<SidebarPatient />} />
+</Routes>
+*/
+<Routes>
+<Route path="/" element={<ChatBot />} />
 </Routes>
 
 
