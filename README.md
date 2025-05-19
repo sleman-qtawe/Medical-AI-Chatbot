@@ -1,5 +1,4 @@
-(chat-ui.jpeg)
-
+![Chatbot Interface](chat-ui.jpeg)
 # 🏥 Medical AI Chatbot (Student Project)
 
 This is a simplified version of our chatbot built for educational purposes. It helps simulate how AI could assist patients inside hospitals by answering questions, managing appointments, and sending SMS notifications.
