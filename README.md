@@ -1,4 +1,4 @@
-(chat-ui.png)
+(chat-ui.jpeg)
 
 # 🏥 Medical AI Chatbot (Student Project)
 
