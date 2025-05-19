@@ -14,6 +14,14 @@ This is a simplified version of our chatbot built for educational purposes. It h
 - 🌐 **Flask** – Python web backend framework  
 - 🗄️ **MongoDB** – to store users, chats, and appointment data  
 - 🤝 **Team Collaboration** – built with teamwork during a group study project
+- ## 👥 Team Members
+- 
+- 👨‍💻 Sleman Qtawe – Project Lead, Gemini AI integration, Flask backend  
+- 👩‍💻 Mahmoud Jbareen – GBooking API setup, Twilio SMS integration  
+- 👨‍💻 Mais Jazmawe – MongoDB database design, backend routing  
+- 👩‍💻 Jenan Agbaria – Frontend integration, chatbot UI/UX  
+- 👨‍💻 Tamara Mahjna – Deployment, testing, and documentation
+
 
 ---
 
