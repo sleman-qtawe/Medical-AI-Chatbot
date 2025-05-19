@@ -13,12 +13,17 @@ function LoginSignup() {
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [otp, setOtp] = useState(0); // حالة لتخزين الـ OTP المدخل
-  const [isOtpModalOpen, setIsOtpModalOpen] = useState(false); // حالة لفتح المودال
-  const [isOtpVerified, setIsOtpVerified] = useState(false); // حالة للتحقق من الـ OTP
+  const [otp, setOtp] = useState("");
+  const [isOtpModalOpen, setIsOtpModalOpen] = useState(false);
+  const [isOtpVerified, setIsOtpVerified] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const loginUser = async () => {
+    setIsLoading(true);
+    setError("");
     try {
       const response = await fetch(`${apiurl}/login`, {
         method: "POST",
@@ -26,109 +31,129 @@ function LoginSignup() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ email, password }),
+        credentials: "include",
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        localStorage.setItem("token", data.token);
-        console.log("Login successful:", data);
-
-       
+        console.log("Login response:", data);
+        setCurrentUser(data.user);
+        
         if (data.verified === false) {
-          setIsOtpModalOpen(true); 
+          // Use the phone number from the response
+          setPhone(data.user.phone);
+          setIsOtpModalOpen(true);
         } else {
-          setIsAuthenticated(true);
-          navigateBasedOnRole(data.user.role);
+          handleSuccessfulLogin(data);
         }
       } else {
-        console.log("Login failed:", data.error);
-        alert(data.error);
+        setError(data.error || "Login failed");
       }
     } catch (error) {
-      console.log("Error logging in:", error);
-      alert("An error occurred while logging in.");
+      setError("An error occurred while logging in.");
+      console.error("Login error:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const verifyOtp = async () => {
+    setIsLoading(true);
+    setError("");
     try {
       const response = await fetch(`${apiurl}/verify-otp`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ phone: phone, code: otp }),
+        body: JSON.stringify({ phone, code: otp }),
+        credentials: "include",
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        setIsOtpVerified(true);
-        setIsOtpModalOpen(false); 
-        navigateBasedOnRole(data.user.role);
+        handleSuccessfulLogin(data);
       } else {
-        alert("Invalid OTP");
+        setError(data.error || "Invalid OTP");
       }
     } catch (error) {
-      console.log("Error verifying OTP:", error);
-      alert("Something went wrong during OTP verification.");
+      setError("OTP verification failed");
+      console.error("OTP error:", error);
+    } finally {
+      setIsLoading(false);
     }
+  };
+
+  const handleSuccessfulLogin = (data) => {
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("user", JSON.stringify(data.user));
+    setIsAuthenticated(true);
+    setIsOtpVerified(true);
+    setIsOtpModalOpen(false);
+    navigateBasedOnRole(data.user.role);
   };
 
   const navigateBasedOnRole = (role) => {
-    if (role === "admin") {
-      navigate("/admin");
-    } else if (role === "patient") {
-      navigate("/patient");
-    } else if (role === "doctor") {
-      navigate("/doctor");
-    } else {
-      console.log("Role not recognized");
-      alert("Role not recognized");
+    switch (role) {
+      case "admin":
+        navigate("/admin");
+        break;
+      case "patient":
+        navigate("/patient");
+        break;
+      case "doctor":
+        navigate("/doctor");
+        break;
+      default:
+        setError("Unknown user role");
     }
   };
-  
 
   const addUser = async () => {
-    const newUser = {
-      username,
-      userid: userId,
-      userGender,
-      email,
-      password,
-      phone,
-    };
-
+    setIsLoading(true);
+    setError("");
     try {
       const response = await fetch(`${apiurl}/patients`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(newUser),
+        body: JSON.stringify({
+          username,
+          userid: userId,
+          userGender,
+          email,
+          password,
+          phone,
+        }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        console.log("User added successfully");
         alert("Account created successfully!");
-        setEmail("");
-        setUsername("");
-        setPassword("");
-        setUserGender("");
-        setUserId("");
-        setPhone("")
+        resetForm();
         setIsSignUp(false);
       } else {
-        console.log("Failed to add user:", data.error);
-        alert(`Failed: ${data.error}`);
+        setError(data.error || "Registration failed");
       }
     } catch (error) {
-      console.log("Error adding user:", error);
-      alert("Something went wrong.");
+      setError("Registration failed");
+      console.error("Registration error:", error);
+    } finally {
+      setIsLoading(false);
     }
+  };
+
+  const resetForm = () => {
+    setUserId("");
+    setUsername("");
+    setEmail("");
+    setPassword("");
+    setUserGender("");
+    setPhone("");
   };
 
   return (
@@ -137,18 +162,22 @@ function LoginSignup() {
         <button
           className={`nav-btn ${!isSignUp ? "active" : ""}`}
           onClick={() => setIsSignUp(false)}
+          disabled={isLoading}
         >
           Log In
         </button>
         <button
           className={`nav-btn ${isSignUp ? "active" : ""}`}
           onClick={() => setIsSignUp(true)}
+          disabled={isLoading}
         >
           Sign Up
         </button>
       </div>
 
       <h2>{isSignUp ? "Create an Account" : "Welcome Back"}</h2>
+
+      {error && <div className="error-message">{error}</div>}
 
       {isSignUp && (
         <>
@@ -158,6 +187,7 @@ function LoginSignup() {
             placeholder="ID"
             value={userId}
             onChange={(e) => setUserId(e.target.value)}
+            disabled={isLoading}
           />
           <input
             type="text"
@@ -165,18 +195,21 @@ function LoginSignup() {
             placeholder="Full Name"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            disabled={isLoading}
           />
-           <input
+          <input
             type="tel"
             className="input"
             placeholder="Phone (e.g. +972...)"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
+            disabled={isLoading}
           />
           <select
             className="input"
             value={userGender}
             onChange={(e) => setUserGender(e.target.value)}
+            disabled={isLoading}
           >
             <option value="">Select Gender</option>
             <option value="Male">Male</option>
@@ -191,6 +224,7 @@ function LoginSignup() {
         placeholder="Email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
+        disabled={isLoading}
       />
 
       <input
@@ -199,27 +233,50 @@ function LoginSignup() {
         placeholder="Password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
+        disabled={isLoading}
       />
 
       {isSignUp ? (
-        <button onClick={addUser} className="btn">Sign Up</button>
+        <button onClick={addUser} className="btn" disabled={isLoading}>
+          {isLoading ? "Creating Account..." : "Sign Up"}
+        </button>
       ) : (
-        <button onClick={loginUser} className="btn">Log In</button>
+        <button onClick={loginUser} className="btn" disabled={isLoading}>
+          {isLoading ? "Logging In..." : "Log In"}
+        </button>
       )}
 
-      {/* Modal for OTP verification */}
+      {/* OTP Verification Modal */}
       {isOtpModalOpen && (
         <div className="otp-modal">
           <div className="modal-content">
             <h3>Enter OTP</h3>
+            <p>We've sent a verification code to {phone}</p>
             <input
-              type="number"
+              type="text"
               value={otp}
               onChange={(e) => setOtp(e.target.value)}
               placeholder="Enter OTP"
               className="input"
+              disabled={isLoading}
             />
-            <button onClick={verifyOtp} className="btn">Verify OTP</button>
+            {error && <div className="error-message">{error}</div>}
+            <div className="modal-buttons">
+              <button
+                onClick={() => setIsOtpModalOpen(false)}
+                className="btn secondary"
+                disabled={isLoading}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={verifyOtp}
+                className="btn"
+                disabled={isLoading || !otp}
+              >
+                {isLoading ? "Verifying..." : "Verify"}
+              </button>
+            </div>
           </div>
         </div>
       )}

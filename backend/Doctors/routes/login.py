@@ -1,9 +1,8 @@
-# routes/login.py
 from flask import request, jsonify
 from twilio.rest import Client
 import bcrypt
 import traceback
-from datetime import datetime
+from datetime import datetime, timedelta
 
 def login_handler(db):
     client = Client('ACcaa5498d9e4283deee25955f480d1f43', 'f9e41816a59aacf0a37b9d3e40c4ffc5')
@@ -55,9 +54,13 @@ def login_handler(db):
     service = 'VA879b9c4bb6adc0206ece89c713a24511'
 
     try:
+        # Clear any existing OTPs for this phone
+        otp_collection.delete_many({"phone": phone})
+        
         verification = client.verify.v2.services(service).verifications.create(
             to=phone, channel='sms'
         )
+        
         otp_collection.insert_one({
             "email": email,
             "phone": phone,
@@ -69,7 +72,10 @@ def login_handler(db):
             "message": "OTP sent to your phone",
             "user": {
                 "email": email,
-                "role": role
+                "phone": phone,  # Include phone in response
+                "name": user.get("username", ""),
+                "role": role,
+                "_id": str(user.get("_id", ""))
             },
             "token": "pending_verification",
             "verified": False
@@ -81,6 +87,7 @@ def login_handler(db):
 
 def verify_otp_handler(db):
     client = Client('ACcaa5498d9e4283deee25955f480d1f43', 'f9e41816a59aacf0a37b9d3e40c4ffc5')
+    otp_collection = db["otp_verifications"]
     data = request.get_json()
 
     phone = data.get('phone')
@@ -93,18 +100,40 @@ def verify_otp_handler(db):
     if phone.startswith('0'):
         phone = '+972' + phone[1:]
 
+    # Check if there's a pending OTP for this phone
+    pending_otp = otp_collection.find_one({
+        "phone": phone,
+        "used": False,
+        "sent_at": {"$gt": datetime.utcnow() - timedelta(minutes=5)}
+    })
+
+    if not pending_otp:
+        return jsonify({"error": "No pending OTP verification found or OTP expired"}), 400
+
     try:
         verification_check = client.verify.v2.services(service).verification_checks.create(
             to=phone, code=code
         )
 
         if verification_check.status == "approved":
-            db['otp_verifications'].update_many(
-                {"phone": phone, "used": False},
-                {"$set": {"used": True}}
+            # Mark OTP as used
+            otp_collection.update_one(
+                {"_id": pending_otp["_id"]},
+                {"$set": {"used": True, "verified_at": datetime.utcnow()}}
             )
+            
+            # Get user details
+            user = db["patients"].find_one({"phone": phone}) or db["doctors"].find_one({"phone": phone})
+            
             return jsonify({
                 "message": "Verification successful",
+                "user": {
+                    "email": user["email"],
+                    "name": user.get("username", ""),
+                    "role": "patient" if "patients" in user else "doctor",
+                    "_id": str(user["_id"])
+                },
+                "token": "verified_token",
                 "verified": True
             }), 200
         else:

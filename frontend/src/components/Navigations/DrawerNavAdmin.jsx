@@ -15,15 +15,14 @@ import { Link, Outlet } from "react-router-dom";
 
 const DrawerNavAdmin = () => {
   const [open, setOpen] = useState(false);
-
   const [hovered, setHovered] = useState({
     EditUsers: false,
     AddDoctors: false,
     Doctors: false,
-    NewChatBot:false,
+    ChatBot: false,
+    AddDepartment: false,
   });
 
-  // Handle mouse enter and leave for hover effect
   const handleMouseEnter = (page) => {
     setHovered((prev) => ({ ...prev, [page]: true }));
   };
@@ -34,7 +33,6 @@ const DrawerNavAdmin = () => {
 
   return (
     <>
-      {/* إخفاء الأيقونة إذا كان Drawer مفتوح */}
       <IconButton 
         onClick={() => setOpen(true)} 
         sx={{ 
@@ -43,7 +41,7 @@ const DrawerNavAdmin = () => {
           top: 20,              
           left: 20,             
           zIndex: 1300,          
-          display: open ? "none" : "block"  // إخفاء الأيقونة عند فتح الـ Drawer
+          display: open ? "none" : "block"  
         }}
       >
         <FontAwesomeIcon icon={faBars} />
@@ -54,7 +52,7 @@ const DrawerNavAdmin = () => {
           <ListItem
             role="button"
             component={Link}
-            to="Doctors"
+            to="/admin/Doctors"
             onClick={() => setOpen(false)}
             onMouseEnter={() => handleMouseEnter("Doctors")}
             onMouseLeave={() => handleMouseLeave("Doctors")}
@@ -67,27 +65,11 @@ const DrawerNavAdmin = () => {
             />
           </ListItem>
 
-          <ListItem
-            role="button"
-            component={Link}
-            to="NewChatBot"
-            onClick={() => setOpen(false)}
-            onMouseEnter={() => handleMouseEnter("NewChatBot")}
-            onMouseLeave={() => handleMouseLeave("NewChatBot")}
-            style={hovered.NewChatBot? styles.hoveredItem : styles.listItem}
-          >
-            <FontAwesomeIcon icon={faUserPlus} style={styles.icon} />
-            <ListItemText 
-              primary="NewChatBot" 
-              style={styles.listItemText} 
-            />
-          </ListItem>
-
 
           <ListItem
             role="button"
             component={Link}
-            to="AddDoctor"
+            to="/admin/AddDoctor"
             onClick={() => setOpen(false)}
             onMouseEnter={() => handleMouseEnter("AddDoctors")}
             onMouseLeave={() => handleMouseLeave("AddDoctors")}
@@ -96,6 +78,22 @@ const DrawerNavAdmin = () => {
             <FontAwesomeIcon icon={faUserPlus} style={styles.icon} />
             <ListItemText 
               primary="Add Doctors" 
+              style={styles.listItemText} 
+            />
+          </ListItem>
+
+          <ListItem
+            role="button"
+            component={Link}
+            to="/admin/AddDepartment"
+            onClick={() => setOpen(false)}
+            onMouseEnter={() => handleMouseEnter("AddDepartment")}
+            onMouseLeave={() => handleMouseLeave("AddDepartment")}
+            style={hovered.AddDepartment ? styles.hoveredItem : styles.listItem}
+          >
+            <FontAwesomeIcon icon={faUserPlus} style={styles.icon} />
+            <ListItemText 
+              primary="AddDepartment" 
               style={styles.listItemText} 
             />
           </ListItem>
@@ -112,19 +110,19 @@ const styles = {
     alignItems: "center",
     padding: "10px 20px",
     borderRadius: "4px",
-    transition: "background-color 0.3s ease, transform 0.3s ease", // Animation on hover
+    transition: "background-color 0.3s ease, transform 0.3s ease", 
   },
   hoveredItem: {
     display: "flex",
     alignItems: "center",
     padding: "10px 20px",
     borderRadius: "4px",
-    backgroundColor: "#0fa4af",  // Change background color on hover
+    backgroundColor: "#0fa4af",  
     transform: "scale(1.05)",  
     transition: "background-color 0.3s ease, transform 0.3s ease", 
   },
   listItemText: {
-    marginLeft: "20px",  // زيادة المسافة بين الأيقونة والنص
+    marginLeft: "20px",  
     fontSize: "16px",
     fontWeight: "500",
     color: "#333",

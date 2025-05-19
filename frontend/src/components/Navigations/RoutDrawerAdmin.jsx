@@ -1,22 +1,22 @@
-import React from "react";
-import { Routes, Route } from "react-router-dom";
-import DrawerNavAdmin from "./DrawerNavAdmin.jsx";
-import AddDoctor from "../addDoctor/AddDoctor.jsx";
-import Doctors from "../Doctors/Doctors.jsx";
-import ChatBot from "../ChatBot/chatBot.jsx"; 
+import React from 'react'
+import { Routes, Route, Navigate } from 'react-router-dom';
+import DoctorProgram from '../Doctor/doctorProgram';
+import CalenderPage from '../Doctor/CalenderPage'
+import DrawerNavDoctor from './DrawerNavDoctor';
+
 
 const RoutDrawer = () => {
   return (
     <div style={{ flex: 1 }}>
       <Routes>
-        <Route path="/" element={<DrawerNavAdmin />}>
-          <Route index element={<ChatBot />} />
-          <Route path="Doctors" element={<Doctors />} />
-          <Route path="AddDoctor" element={<AddDoctor />} />
-          <Route path="ChatBot" element={<ChatBot />} />
+        <Route path="/" element={<DrawerNavDoctor />}>
+          <Route index element={<Navigate to="DoctorProgram" />} />
+          <Route path="DoctorProgram" element={<DoctorProgram />} />
+          <Route path="CalenderPage" element={<CalenderPage />} />
+
         </Route>
       </Routes>
     </div>
   );
-};
-export default RoutDrawer;
+}
+export default RoutDrawer
