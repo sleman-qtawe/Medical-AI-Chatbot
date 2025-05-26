@@ -15,7 +15,6 @@ This is a simplified version of our chatbot built for educational purposes. It h
 - 🗄️ **MongoDB** – to store users, chats, and appointment data  
 - 🤝 **Team Collaboration** – built with teamwork during a group study project
 ## 👥 Team Members
-- 
 - 👨‍💻 Mahmoud Jbareen – Project Lead, Gemini AI integration, Flask backend  
 - 👩‍💻  Sleman Qtawe– GBooking API setup, Twilio SMS integration  
 - 👨‍💻 Mais Jazmawe – MongoDB database design, backend routing  
