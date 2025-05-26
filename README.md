@@ -1,5 +1,5 @@
 ![Chatbot Interface](chat-ui.jpeg)
-# 🏥 Medical AI Chatbot (Student Project)
+# 🏥 Medical AI Chatbot (Junior Project)
 
 This is a simplified version of our chatbot built for educational purposes. It helps simulate how AI could assist patients inside hospitals by answering questions, managing appointments, and sending SMS notifications.
 
@@ -16,8 +16,8 @@ This is a simplified version of our chatbot built for educational purposes. It h
 - 🤝 **Team Collaboration** – built with teamwork during a group study project
 ## 👥 Team Members
 - 
-- 👨‍💻 Sleman Qtawe – Project Lead, Gemini AI integration, Flask backend  
-- 👩‍💻 Mahmoud Jbareen – GBooking API setup, Twilio SMS integration  
+- 👨‍💻 Mahmoud Jbareen – Project Lead, Gemini AI integration, Flask backend  
+- 👩‍💻  Sleman Qtawe– GBooking API setup, Twilio SMS integration  
 - 👨‍💻 Mais Jazmawe – MongoDB database design, backend routing  
 - 👩‍💻 Jenan Agbaria – Frontend integration, chatbot UI/UX  
 - 👨‍💻 Tamara Mahjna – Deployment, testing, and documentation
