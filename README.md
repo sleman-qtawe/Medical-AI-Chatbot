@@ -6,7 +6,7 @@ This is a simplified version of our chatbot built for educational purposes. It h
 
 ---
 
-## 🔧 Technologies Used
+##  Technologies Used
 
 -  **Gemini AI** – for natural, medical-style conversations  
 -  **GBooking API** – to book and retrieve appointment data  
